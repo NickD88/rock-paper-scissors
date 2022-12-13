@@ -22,8 +22,11 @@ const score = {
 }
 
 const getUserName = () => {
-  username = prompt("Please enter your name");
-  return username.trim();
+  userName = prompt("Please enter your name");
+  while (userName.length === 0) {
+    userName = prompt("Invalid entry.  Please enter your name");
+  }
+  return userName.trim();
 }
 
 const getNumberGames = () => {
