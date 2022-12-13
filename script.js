@@ -8,13 +8,13 @@
     // scissors beats paper
     // paper beats rock
 
-const gameChoices = ["rock", "paper", "scissors"]
-
 const winningConditions = {
-  paper: "rock",
-  rock: "scissors",
-  scissors: "paper"
+  paper: ["rock", "covers"],
+  rock: ["scissors", "smashes"],
+  scissors: ["paper", "cuts"]
 }
+
+const gameChoices = () => Object.keys(winningConditions);
 
 const score = {
   player: 0,
@@ -39,24 +39,26 @@ while (isNaN(Number.parseInt(games, 10))) {
 
 const getUserSelection = () => {
   let  userChoice = prompt("Please choose rock, paper or scissors").toLowerCase();
-  while (!gameChoices.includes(userChoice)) {
+  while (!gameChoices().includes(userChoice)) {
     userChoice = prompt("Invaid entry.  Please choose rock, paper or scissors").toLowerCase();
   }
   return userChoice;
 }
 
 const getComputerSelection = () => {
-  return gameChoices[Math.floor(Math.random() * gameChoices.length)];
+  return (gameChoices())[Math.floor(Math.random() * gameChoices().length)];
 }
 
 const determineWinner = (player, computer) => {
   if (player === computer) {
     console.log(`You chose ${player}, the computer chose ${computer}. It's a tie.`);
-  } else if (winningConditions[player] === computer) {
-    console.log(`You chose ${player}, the computer chose ${computer}. You win!`);
+  } else if (winningConditions[player].includes(computer)) {
+    console.log(`You chose ${player}, the computer chose ${computer}.
+${player} ${winningConditions[player][1]} ${computer}`);
     incrementScore("player")
   } else {
-    console.log(`You chose ${player}, the computer chose ${computer}. The computer wins.`)
+    console.log(`You chose ${player}, the computer chose ${computer}. The computer wins.
+${computer} ${winningConditions[computer][1]} ${player}`)
     incrementScore("computer")
   }
 }
