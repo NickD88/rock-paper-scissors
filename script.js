@@ -14,7 +14,7 @@ const winningConditions = {
   scissors: ["paper", "cuts"]
 }
 
-const gameChoices = () => Object.keys(winningConditions);
+const getGameChoices = () => Object.keys(winningConditions);
 
 const score = {
   player: 0,
@@ -37,16 +37,16 @@ while (isNaN(Number.parseInt(games, 10))) {
   return Number.parseInt(games, 10)
 }
 
-const getUserSelection = () => {
+const getUserSelection = (validChoice) => {
   let  userChoice = prompt("Please choose rock, paper or scissors").toLowerCase();
-  while (!gameChoices().includes(userChoice)) {
+  while (!validChoice.includes(userChoice)) {
     userChoice = prompt("Invaid entry.  Please choose rock, paper or scissors").toLowerCase();
   }
   return userChoice;
 }
 
-const getComputerSelection = () => {
-  return (gameChoices())[Math.floor(Math.random() * gameChoices().length)];
+const getComputerSelection = (availableChoice) => {
+  return availableChoice[Math.floor(Math.random() * availableChoice.length)];
 }
 
 const determineWinner = (player, computer) => {
@@ -63,9 +63,9 @@ ${computer} ${winningConditions[computer][1]} ${player}`)
   }
 }
 
-const playRound = () => {
-  const playerChoice = getUserSelection();
-  const computerChoice = getComputerSelection();
+const playRound = (availableChoices) => {
+  const playerChoice = getUserSelection(availableChoices);
+  const computerChoice = getComputerSelection(availableChoices);
   determineWinner(playerChoice, computerChoice);
 }
 
@@ -86,8 +86,9 @@ const winningMessage = (winner, playerName) => {
 const playGame = () => {
   const userName = getUserName();
   const winningNumber = getNumberGames()
+  const gameChoices = getGameChoices();
   while (!winningConditionMet(winningNumber)) {
-    playRound();
+    playRound(gameChoices);
   console.log(score);
   }
   const winningPlayer = score.player === winningNumber ? userName : "computer";
