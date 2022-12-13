@@ -21,6 +21,19 @@ const score = {
   computer: 0
 }
 
+const getUserName = () => {
+  username = prompt("Please enter your name");
+  return username.trim();
+}
+
+const getNumberGames = () => {
+let games = prompt(`How many wins would you like to play to?`);
+while (isNaN(Number.parseInt(games, 10))) {
+  games = prompt(`How many wins would you like to play to?`);
+}
+  return Number.parseInt(games, 10)
+}
+
 const getUserSelection = () => {
   let  userChoice = prompt("Please choose rock, paper or scissors").toLowerCase();
   while (!gameChoices.includes(userChoice)) {
@@ -53,4 +66,27 @@ const playRound = () => {
 
 const incrementScore = (winningPlayer) => score[winningPlayer] += 1;
 
-playRound();
+const winningConditionMet = (numberOfWins) => {
+  return score.player === numberOfWins || score.computer === numberOfWins;
+}
+
+const winningMessage = (winner, playerName) => {
+  return `${winner} is the winner. 
+    The final score is: 
+    ${playerName}: ${score.player}
+    Computer: ${score.computer}
+    `
+}
+
+const playGame = () => {
+  const userName = getUserName();
+  const winningNumber = getNumberGames()
+  while (!winningConditionMet(winningNumber)) {
+    playRound();
+  console.log(score);
+  }
+  const winningPlayer = score.player === winningNumber ? userName : "computer";
+  console.log(winningMessage(winningPlayer, userName));
+}
+
+playGame();
