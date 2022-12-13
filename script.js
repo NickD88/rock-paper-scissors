@@ -16,6 +16,11 @@ const winningConditions = {
   scissors: "paper"
 }
 
+const score = {
+  player: 0,
+  computer: 0
+}
+
 const getUserSelection = () => {
   let  userChoice = prompt("Please choose rock, paper or scissors").toLowerCase();
   while (!gameChoices.includes(userChoice)) {
@@ -27,3 +32,25 @@ const getUserSelection = () => {
 const getComputerSelection = () => {
   return gameChoices[Math.floor(Math.random() * gameChoices.length)];
 }
+
+const determineWinner = (player, computer) => {
+  if (player === computer) {
+    console.log(`You chose ${player}, the computer chose ${computer}. It's a tie.`);
+  } else if (winningConditions[player] === computer) {
+    console.log(`You chose ${player}, the computer chose ${computer}. You win!`);
+    incrementScore("player")
+  } else {
+    console.log(`You chose ${player}, the computer chose ${computer}. The computer wins.`)
+    incrementScore("computer")
+  }
+}
+
+const playRound = () => {
+  const playerChoice = getUserSelection();
+  const computerChoice = getComputerSelection();
+  determineWinner(playerChoice, computerChoice);
+}
+
+const incrementScore = (winningPlayer) => score[winningPlayer] += 1;
+
+playRound();
