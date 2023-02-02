@@ -4,10 +4,65 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
     <title>Odin - Rock Paper Scissors</title>
   </head>
   <body>
-    <h1>Current implemention is through the console.</h1>
+    <header>
+      <div>
+        <h1>Rock Paper Scissors (Lizard Spock)</h1>
+      </div>
+      <div>
+        <a href="#">about</a>
+        <a href="#">github</a>
+      </div>
+    </header>
+    <form class="game-setup">
+      <h2>Choose your game type:</h2>
+      <div class="game-selection">
+        <input
+          type="radio"
+          id="rps"
+          name="game-selection"
+          value="rps"
+          checked
+        />
+        <label class="game-selection__label" for="rps">
+          <h2>Rock Paper Scissors</h2>
+          <p>The classic game of rock paper scissors.</p>
+        </label>
+        <input type="radio" id="rpsls" name="game-selection" value="rpsls" />
+        <label class="game-selection__label" for="rpsls">
+          <h2>Rock Paper Scissors Lizard Spock</h2>
+          <p>Expansion of the classic game invented by Sam Kass</p>
+        </label>
+      </div>
+      <h2>How many games would you like to play</h2>
+      <div class="game-count">
+        <input
+          type="radio"
+          id="out-of-3"
+          name="best-out-of"
+          value="3"
+          checked
+        />
+        <label class="game-selection__label" for="out-of-3">
+          <h2>Best of 3</h2>
+        </label>
+        <input type="radio" id="out-of-5" name="best-out-of" value="5" />
+        <label class="game-selection__label" for="out-of-5">
+          <h2>Best of 5</h2>
+        </label>
+        <input type="radio" id="out-of-7" name="best-out-of" value="7" />
+        <label class="game-selection__label" for="out-of-7">
+          <h2>Best of 7</h2>
+        </label>
+      </div>
+      <input type="submit" value="Let's play!" />
+    </form>
+    <div class="game-results"></div>
+
+    <div class="btn-container"></div>
   </body>
 </html>

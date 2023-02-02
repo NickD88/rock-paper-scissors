@@ -14,26 +14,73 @@ const winningConditions = {
   scissors: ['paper', 'cuts'],
 };
 
+const gameChoices = {
+  rps: [
+    ['rock', '👊'],
+    ['paper', '✋'],
+    ['scissors', '✌️'],
+  ],
+  rpsls: [
+    ['rock', '👊'],
+    ['paper', '✋'],
+    ['scissors', '✌️'],
+    ['lizard', '🦎'],
+    ['spock', '🖖'],
+  ],
+};
+//   rpsls: {
+//     rock: '👊',
+//     paper: '✋',
+//     scissors: '✌️',
+//     lizard: '🦎',
+//     spock: '🖖',
+//   },
+// };
+
+const gameStartForm = document.querySelector('.game-setup');
+
+gameStartForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const gameType = document.querySelector(
+    `input[name="game-selection"]:checked`
+  );
+  const bestOf = document.querySelector(`input[name="best-out-of"]:checked`);
+  playGame(gameType.value, bestOf.value);
+});
+
 const getGameChoices = () => Object.keys(winningConditions);
+
+const generateGameChoices = (gameType) => {
+  const container = document.querySelector('.btn-container');
+  container.innerHTML = '';
+  gameChoices[gameType].forEach((choice) => {
+    let btn = document.createElement('button');
+    btn.classList.toggle('game-choice');
+    btn.setAttribute('data-choice', choice[0]);
+    btn.textContent = `${choice[0]} ${choice[1]}`;
+    container.appendChild(btn);
+  });
+};
 
 const score = {
   player: 0,
   computer: 0,
 };
 
-const getUserName = () => {
-  userName = prompt('Please enter your name');
-  while (userName.length === 0) {
-    userName = prompt('Invalid entry.  Please enter your name');
-  }
-  return userName.trim();
-};
+// const getUserName = () => {
+//   userName = prompt('Please enter your name');
+//   while (userName.length === 0) {
+//     userName = prompt('Invalid entry.  Please enter your name');
+//   }
+//   return userName.trim();s
+// };
 
 const getNumberGames = () => {
   let games = prompt(`How many wins would you like to play to?`);
   while (isNaN(Number.parseInt(games, 10))) {
     games = prompt(`How many wins would you like to play to?`);
   }
+  s;
   return Number.parseInt(games, 10);
 };
 
@@ -89,16 +136,19 @@ const winningMessage = (winner, playerName) => {
     `;
 };
 
-const playGame = () => {
-  const userName = getUserName();
-  const winningNumber = getNumberGames();
-  const gameChoices = getGameChoices();
-  while (!winningConditionMet(winningNumber)) {
-    playRound(gameChoices);
-    console.log(score);
-  }
-  const winningPlayer = score.player === winningNumber ? userName : 'computer';
-  console.log(winningMessage(winningPlayer, userName));
-};
+// const playGame = () => {
+//   // const userName = getUserName();
+//   const winningNumber = getNumberGames();
+//   const gameChoices = getGameChoices();
+//   while (!winningConditionMet(winningNumber)) {
+//     playRound(gameChoices);
+//     console.log(score);
+//   }
+//   const winningPlayer = score.player === winningNumber ? userName : 'computer';
+//   console.log(winningMessage(winningPlayer, userName));
+// };
 
-playGame();
+const playGame = (gameType, bestOf) => {
+  gameStartForm.style.display = 'none';
+  generateGameChoices(gameType);
+};
