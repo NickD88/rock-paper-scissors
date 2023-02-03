@@ -1,4 +1,55 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html,
 body {
+  height: 100%;
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+#root,
+#__next {
+  isolation: isolate;
+}
+
+body {
+  max-width: 70%;
+  margin: 0 auto;
+  background-color: #212121;
+  color: #fafafa;
+}
+
+main {
   background-color: #212121;
   color: #fafafa;
 }
@@ -13,19 +64,19 @@ header {
   justify-content: space-between;
   width: 50%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .game-setup {
   width: 60%;
   margin: 0 auto;
-  text-align: center;
 }
 
 .game-selection,
 .game-count {
   display: flex;
   justify-content: space-between;
+  gap: 2rem;
 }
 
 input[type='radio'] {
@@ -36,7 +87,7 @@ input[type='radio'] {
   background: #627d98;
   /* border: 2px solid #102a43; */
   border-radius: 1rem;
-  padding: 0.75rem;
+  padding: 0.5rem;
   margin-bottom: 1rem;
   text-align: center;
   cursor: pointer;
@@ -45,4 +96,63 @@ input[type='radio'] {
 input[type='radio']:checked + label {
   background: #102a43;
   border: 2px solid #fafafa;
+}
+
+.btn {
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.scoreboard {
+  /* width: 60%; */
+}
+
+.scoreboard-initial {
+  display: none;
+}
+
+/* .scoreboard-active {
+  display: flex;
+} */
+
+.score-entry {
+  width: 3rem;
+  border: 1px solid #fafafa;
+}
+
+.individual-score-player,
+.individual-score-computer {
+  display: flex;
+  gap: 2.5rem;
+  margin: 1rem 4rem;
+  justify-content: center;
+}
+
+.scores-computer,
+.scores-player {
+  display: flex;
+  gap: 1rem;
+}
+
+.playing-field {
+  height: 5rem;
+  border: 1px solid red;
+}
+
+.playing-field-hidden {
+  display: none;
+}
+
+.playing-field-active {
+  display: flex;
+  justify-content: center;
+}
+
+.playing-field-active > div {
+  flex: auto;
+}
+
+.choice {
+  border: 1px solid blue;
 }

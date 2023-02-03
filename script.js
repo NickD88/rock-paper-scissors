@@ -28,16 +28,16 @@ const gameChoices = {
     ['spock', '🖖'],
   ],
 };
-//   rpsls: {
-//     rock: '👊',
-//     paper: '✋',
-//     scissors: '✌️',
-//     lizard: '🦎',
-//     spock: '🖖',
-//   },
-// };
+
+const scores = {
+  player: [],
+  computer: [],
+};
 
 const gameStartForm = document.querySelector('.game-setup');
+const scoreboardSection = document.querySelector('.scoreboard');
+const playingField = document.querySelector('.playing-field');
+const userChoicePlayingField = document.querySelector('.user-selection');
 
 gameStartForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -50,7 +50,7 @@ gameStartForm.addEventListener('submit', (e) => {
 
 const getGameChoices = () => Object.keys(winningConditions);
 
-const generateGameChoices = (gameType) => {
+const renderGameChoices = (gameType) => {
   const container = document.querySelector('.btn-container');
   container.innerHTML = '';
   gameChoices[gameType].forEach((choice) => {
@@ -61,10 +61,40 @@ const generateGameChoices = (gameType) => {
     container.appendChild(btn);
   });
 };
+const generateBlankScoreboard = (numGames) => {
+  Object.keys(scores).forEach((user) => {
+    scores[user].length = numGames;
+    scores[user].fill('');
+  });
+};
+const renderPlayingField = () => {
+  playingField.classList.remove('playing-field-hidden');
+  playingField.classList.add('playing-field-active');
+};
 
-const score = {
-  player: 0,
-  computer: 0,
+const renderScoreBoard = (numGames) => {
+  generateBlankScoreboard(numGames);
+  scoreboardSection.classList.remove('scoreboard-initial');
+  scoreboardSection.classList.add('scoreboard-active');
+  Object.keys(scores).forEach((user) => {
+    let scoreboard = document.querySelector(`.scores-${user}`);
+    console.log(scoreboard);
+    scores[user].forEach((score) => {
+      let entry = document.createElement('div');
+      entry.classList.add('score-entry');
+      scoreboard.appendChild(entry);
+    });
+  });
+};
+
+const getUserSelection = (gameType) => {
+  document.querySelectorAll('.game-choice').forEach((choice) => {
+    console.log(choice);
+    choice.addEventListener(
+      'click',
+      (e) => (userChoicePlayingField.textContent = e.target.dataset.choice)
+    );
+  });
 };
 
 // const getUserName = () => {
@@ -75,26 +105,26 @@ const score = {
 //   return userName.trim();s
 // };
 
-const getNumberGames = () => {
-  let games = prompt(`How many wins would you like to play to?`);
-  while (isNaN(Number.parseInt(games, 10))) {
-    games = prompt(`How many wins would you like to play to?`);
-  }
-  s;
-  return Number.parseInt(games, 10);
-};
+// const getNumberGames = () => {
+//   let games = prompt(`How many wins would you like to play to?`);
+//   while (isNaN(Number.parseInt(games, 10))) {
+//     games = prompt(`How many wins would you like to play to?`);
+//   }
+//   s;
+//   return Number.parseInt(games, 10);
+// };
 
-const getUserSelection = (validChoice) => {
-  let userChoice = prompt(
-    'Please choose rock, paper or scissors'
-  ).toLowerCase();
-  while (!validChoice.includes(userChoice)) {
-    userChoice = prompt(
-      'Invaid entry.  Please choose rock, paper or scissors'
-    ).toLowerCase();
-  }
-  return userChoice;
-};
+// const getUserSelection = (validChoice) => {
+//   let userChoice = prompt(
+//     'Please choose rock, paper or scissors'
+//   ).toLowerCase();
+//   while (!validChoice.includes(userChoice)) {
+//     userChoice = prompt(
+//       'Invaid entry.  Please choose rock, paper or scissors'
+//     ).toLowerCase();
+//   }
+//   return userChoice;
+// };
 
 const getComputerSelection = (availableChoice) => {
   return availableChoice[Math.floor(Math.random() * availableChoice.length)];
@@ -150,5 +180,8 @@ const winningMessage = (winner, playerName) => {
 
 const playGame = (gameType, bestOf) => {
   gameStartForm.style.display = 'none';
-  generateGameChoices(gameType);
+  renderScoreBoard(bestOf);
+  renderPlayingField();
+  renderGameChoices(gameType);
+  getUserSelection(gameType);
 };
