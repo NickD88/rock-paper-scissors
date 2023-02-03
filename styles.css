@@ -104,9 +104,9 @@ input[type='radio']:checked + label {
   display: inline-block;
 }
 
-.scoreboard {
-  /* width: 60%; */
-}
+/* .scoreboard {
+  width: 60%;
+} */
 
 .scoreboard-initial {
   display: none;

@@ -14,19 +14,19 @@ const winningConditions = {
   scissors: ['paper', 'cuts'],
 };
 
-const gameChoices = {
-  rps: [
-    ['rock', '👊'],
-    ['paper', '✋'],
-    ['scissors', '✌️'],
-  ],
-  rpsls: [
-    ['rock', '👊'],
-    ['paper', '✋'],
-    ['scissors', '✌️'],
-    ['lizard', '🦎'],
-    ['spock', '🖖'],
-  ],
+const allGameChoices = {
+  rps: {
+    rock: '👊',
+    paper: '✋',
+    scissors: '✌️',
+  },
+  rpsls: {
+    rock: '👊',
+    paper: '✋',
+    scissors: '✌️',
+    lizard: '🦎',
+    spock: '🖖',
+  },
 };
 
 const scores = {
@@ -48,18 +48,18 @@ gameStartForm.addEventListener('submit', (e) => {
   playGame(gameType.value, bestOf.value);
 });
 
-const getGameChoices = () => Object.keys(winningConditions);
+// const getGameChoices = () => Object.keys(winningConditions);
 
-const renderGameChoices = (gameType) => {
+const renderGameChoices = (gameChoices) => {
   const container = document.querySelector('.btn-container');
   container.innerHTML = '';
-  gameChoices[gameType].forEach((choice) => {
+  for (const property in gameChoices) {
     let btn = document.createElement('button');
     btn.classList.toggle('game-choice');
-    btn.setAttribute('data-choice', choice[0]);
-    btn.textContent = `${choice[0]} ${choice[1]}`;
+    btn.setAttribute('data-choice', property);
+    btn.textContent = `${property} ${gameChoices[property]}`;
     container.appendChild(btn);
-  });
+  }
 };
 const generateBlankScoreboard = (numGames) => {
   Object.keys(scores).forEach((user) => {
@@ -179,9 +179,11 @@ const winningMessage = (winner, playerName) => {
 // };
 
 const playGame = (gameType, bestOf) => {
+  const gameChoices = allGameChoices[gameType];
+  console.log(gameChoices);
   gameStartForm.style.display = 'none';
   renderScoreBoard(bestOf);
   renderPlayingField();
-  renderGameChoices(gameType);
+  renderGameChoices(gameChoices);
   getUserSelection(gameType);
 };
