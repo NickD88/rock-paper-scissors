@@ -24,6 +24,7 @@
         <div class="game-selection">
           <input
             type="radio"
+            class="hidden"
             id="rps"
             name="game-selection"
             value="rps"
@@ -33,7 +34,13 @@
             <h2>Rock Paper Scissors</h2>
             <p>The classic game of rock paper scissors.</p>
           </label>
-          <input type="radio" id="rpsls" name="game-selection" value="rpsls" />
+          <input
+            type="radio"
+            class="hidden"
+            id="rpsls"
+            name="game-selection"
+            value="rpsls"
+          />
           <label class="game-selection__label" for="rpsls">
             <h2>Rock Paper Scissors Lizard Spock</h2>
             <p>Expansion of the classic game invented by Sam Kass</p>
@@ -44,6 +51,7 @@
         <div class="game-count">
           <input
             type="radio"
+            class="hidden"
             id="out-of-3"
             name="best-out-of"
             value="3"
@@ -52,11 +60,23 @@
           <label class="game-selection__label" for="out-of-3">
             <h2>Best of 3</h2>
           </label>
-          <input type="radio" id="out-of-5" name="best-out-of" value="5" />
+          <input
+            type="radio"
+            class="hidden"
+            id="out-of-5"
+            name="best-out-of"
+            value="5"
+          />
           <label class="game-selection__label" for="out-of-5">
             <h2>Best of 5</h2>
           </label>
-          <input type="radio" id="out-of-7" name="best-out-of" value="7" />
+          <input
+            type="radio"
+            class="hidden"
+            id="out-of-7"
+            name="best-out-of"
+            value="7"
+          />
           <label class="game-selection__label" for="out-of-7">
             <h2>Best of 7</h2>
           </label>
@@ -64,25 +84,27 @@
 
         <input type="submit" class="btn" value="Let's play!" />
       </form>
-      <div class="scoreboard scoreboard-initial">
-        <div class="individual-score-player">
-          <p>Player Score: <span class="player-score">0</span></p>
-          <div class="scores-player"></div>
+      <div class="game-container hidden">
+        <div class="scoreboard scoreboard-initial">
+          <div class="individual-score-player">
+            <p>Player Score: <span class="player-score">0</span></p>
+            <div class="scores-player"></div>
+          </div>
+          <div class="individual-score-computer">
+            <p>Computer Score: <span class="computer-score">0</span></p>
+            <div class="scores-computer"></div>
+          </div>
         </div>
-        <div class="individual-score-computer">
-          <p>Computer Score: <span class="computer-score">0</span></p>
-          <div class="scores-computer"></div>
+        <div class="playing-field playing-field-hidden">
+          <div class="choice choice-selection-user">
+            <p class="user-selection"></p>
+          </div>
+          <div class="choice choice-selection-computer">
+            <p class="computer-selection"></p>
+          </div>
         </div>
+        <div class="btn-container"></div>
       </div>
-      <div class="playing-field playing-field-hidden">
-        <div class="choice choice-selection-user">
-          <p class="user-selection"></p>
-        </div>
-        <div class="choice choice-selection-computer">
-          <p class="computer-selection"></p>
-        </div>
-      </div>
-      <div class="btn-container"></div>
     </main>
   </body>
 </html>

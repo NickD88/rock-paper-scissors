@@ -79,9 +79,9 @@ header {
   gap: 2rem;
 }
 
-input[type='radio'] {
+/* input[type='radio'] {
   display: none;
-}
+} */
 
 .game-selection__label {
   background: #627d98;
@@ -155,4 +155,8 @@ input[type='radio']:checked + label {
 
 .choice {
   border: 1px solid blue;
+}
+
+.hidden {
+  display: none;
 }

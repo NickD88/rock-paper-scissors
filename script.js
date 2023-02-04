@@ -41,18 +41,21 @@ const computerChoicePlayingField = document.querySelector(
 );
 const playerScore = document.querySelector('.player-score');
 const computerScore = document.querySelector('.computer-score');
+const gameContainer = document.querySelector('.game-container');
 
 const clearCurrentGameStats = () => {
   scores.player = 0;
   scores.computer = 0;
   userSelections.player = [];
   userSelections.computer = [];
+  document.querySelector('.computer-score').textContent = 0;
+  document.querySelector('.player-score').textContent = 0;
 };
 
 const renderGameOptionForm = () => {
-  gameStartForm.style.display = '';
   gameStartForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    console.log('newsetupstarted');
     const gameType = document.querySelector(
       `input[name="game-selection"]:checked`
     );
@@ -85,11 +88,8 @@ const generateBlankScoreboard = (numGames) => {
 const renderPlayingField = () => {
   playingField.classList.remove('playing-field-hidden');
   playingField.classList.add('playing-field-active');
-};
-
-const clearScoreBoard = () => {
-  document.querySelector('.computer-score').textContent = 0;
-  document.querySelector('.player-score').textContent = 0;
+  userChoicePlayingField.textContent = '';
+  computerChoicePlayingField.textContent = '';
 };
 
 const initialScoreBoardRender = (numGames) => {
@@ -196,8 +196,7 @@ renderNewGameButton = () => {
     .addEventListener('click', () => {
       clearCurrentGameStats();
       currentRound = 0;
-      clearScoreBoard();
-      renderGameOptionForm();
+      toggleHidden(gameContainer, gameStartForm);
     });
 };
 
@@ -207,9 +206,15 @@ const endGame = () => {
   renderNewGameButton();
 };
 
+const toggleHidden = (...args) => {
+  args.forEach((element) => {
+    element.classList.toggle('hidden');
+  });
+};
+
 const setupGame = (gameType, bestOf) => {
   const gameChoices = allGameChoices[gameType];
-  gameStartForm.style.display = 'none';
+  toggleHidden(gameStartForm, gameContainer);
   initialScoreBoardRender(bestOf);
   renderPlayingField();
   renderGameChoices(gameChoices);
