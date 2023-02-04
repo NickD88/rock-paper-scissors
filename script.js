@@ -24,7 +24,7 @@ const scores = {
   computer: 0,
 };
 
-const userSelections = {
+const roundSelections = {
   player: [],
   computer: [],
 };
@@ -46,8 +46,8 @@ const gameContainer = document.querySelector('.game-container');
 const clearCurrentGameStats = () => {
   scores.player = 0;
   scores.computer = 0;
-  userSelections.player = [];
-  userSelections.computer = [];
+  roundSelections.player = [];
+  roundSelections.computer = [];
   document.querySelector('.computer-score').textContent = 0;
   document.querySelector('.player-score').textContent = 0;
 };
@@ -55,7 +55,7 @@ const clearCurrentGameStats = () => {
 const renderGameOptionForm = () => {
   gameStartForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    console.log('newsetupstarted');
+
     const gameType = document.querySelector(
       `input[name="game-selection"]:checked`
     );
@@ -80,9 +80,9 @@ const renderGameChoices = (gameChoices) => {
 };
 
 const generateBlankScoreboard = (numGames) => {
-  Object.keys(userSelections).forEach((user) => {
-    userSelections[user].length = numGames;
-    userSelections[user].fill('');
+  Object.keys(roundSelections).forEach((user) => {
+    roundSelections[user].length = numGames;
+    roundSelections[user].fill('');
   });
 };
 const renderPlayingField = () => {
@@ -100,14 +100,13 @@ const initialScoreBoardRender = (numGames) => {
 };
 
 const renderScoreBoard = () => {
-  Object.keys(userSelections).forEach((user) => {
+  Object.keys(roundSelections).forEach((user) => {
     let scoreboard = document.querySelector(`.scores-${user}`);
     scoreboard.innerHTML = '';
-    userSelections[user].forEach((score, idx) => {
+    roundSelections[user].forEach((score, idx) => {
       let entry = document.createElement('div');
       let renderChoice = document.createElement('p');
       renderChoice.textContent = score;
-      console.log(renderChoice);
       entry.appendChild(renderChoice);
       entry.setAttribute('data-round', `${user}-${idx}`, 'data-user', user);
       entry.classList.add('score-entry');
@@ -165,18 +164,16 @@ const playRound = (userChoice, availableChoices) => {
 };
 
 const incrementScore = (winner, loser, round) => {
-  document.querySelector(`[data-round=${winner[0]}-${round}]`).textContent =
-    winner[1];
+  roundSelections[winner[0]][round] = winner[1];
+  roundSelections[loser[0]][round] = loser[1];
   scores[winner[0]] += 1;
   document.querySelector(`.${winner[0]}-score`).textContent = scores[winner[0]];
-  document.querySelector(`[data-round=${loser[0]}-${round}]`).textContent =
-    loser[1];
-
+  renderScoreBoard();
   if (winningConditionMet()) endGame();
 };
 
 const winningConditionMet = () => {
-  const winTotal = Math.floor(userSelections.player.length / 2 + 1);
+  const winTotal = Math.floor(roundSelections.player.length / 2 + 1);
   return scores.player === winTotal || scores.computer === winTotal;
 };
 
