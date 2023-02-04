@@ -33,6 +33,7 @@ let currentRound = 0;
 
 const gameStartForm = document.querySelector('.game-setup');
 const scoreboardSection = document.querySelector('.scoreboard');
+const userChoiceContainer = document.querySelector('.btn-container');
 const playingField = document.querySelector('.playing-field');
 const userChoicePlayingField = document.querySelector('.user-selection');
 const computerChoicePlayingField = document.querySelector(
@@ -41,16 +42,26 @@ const computerChoicePlayingField = document.querySelector(
 const playerScore = document.querySelector('.player-score');
 const computerScore = document.querySelector('.computer-score');
 
-gameStartForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const gameType = document.querySelector(
-    `input[name="game-selection"]:checked`
-  );
-  const bestOf = document.querySelector(`input[name="best-out-of"]:checked`);
-  setupGame(gameType.value, bestOf.value);
-});
+const clearCurrentGameStats = () => {
+  scores.player = 0;
+  scores.computer = 0;
+  userSelections.player = [];
+  userSelections.computer = [];
+};
 
-const createGameButton = (name, symbol, location) => {
+const renderGameOptionForm = () => {
+  gameStartForm.style.display = '';
+  gameStartForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const gameType = document.querySelector(
+      `input[name="game-selection"]:checked`
+    );
+    const bestOf = document.querySelector(`input[name="best-out-of"]:checked`);
+    setupGame(gameType.value, bestOf.value);
+  });
+};
+
+const createGameButton = (name, symbol = '', location) => {
   let btn = document.createElement('button');
   btn.classList.toggle('game-choice');
   btn.setAttribute('data-choice', name);
@@ -59,12 +70,12 @@ const createGameButton = (name, symbol, location) => {
 };
 
 const renderGameChoices = (gameChoices) => {
-  const container = document.querySelector('.btn-container');
-  container.innerHTML = '';
+  removeGameButtons();
   for (const property in gameChoices) {
-    createGameButton(property, gameChoices[property], container);
+    createGameButton(property, gameChoices[property], userChoiceContainer);
   }
 };
+
 const generateBlankScoreboard = (numGames) => {
   Object.keys(userSelections).forEach((user) => {
     userSelections[user].length = numGames;
@@ -76,6 +87,11 @@ const renderPlayingField = () => {
   playingField.classList.add('playing-field-active');
 };
 
+const clearScoreBoard = () => {
+  document.querySelector('.computer-score').textContent = 0;
+  document.querySelector('.player-score').textContent = 0;
+};
+
 const initialScoreBoardRender = (numGames) => {
   generateBlankScoreboard(numGames);
   scoreboardSection.classList.remove('scoreboard-initial');
@@ -83,14 +99,10 @@ const initialScoreBoardRender = (numGames) => {
   renderScoreBoard();
 };
 
-const clearScoreBoard = () => {
-  document.querySelector('.scores-player').innerHTML = '';
-  document.querySelector('.scores-computer').innerHTML = '';
-};
-
 const renderScoreBoard = () => {
   Object.keys(userSelections).forEach((user) => {
     let scoreboard = document.querySelector(`.scores-${user}`);
+    scoreboard.innerHTML = '';
     userSelections[user].forEach((score, idx) => {
       let entry = document.createElement('div');
       let renderChoice = document.createElement('p');
@@ -104,12 +116,12 @@ const renderScoreBoard = () => {
   });
 };
 
-const getUserSelection = (gameChoices) => {
+const getUserSelection = (gameChoices, bestOf) => {
   document.querySelectorAll('.game-choice').forEach((choice) => {
     choice.addEventListener('click', (e) => {
       let userSelection = e.target.dataset.choice;
       userChoicePlayingField.textContent = gameChoices[userSelection];
-      playRound(userSelection, gameChoices);
+      playRound(userSelection, gameChoices, bestOf);
     });
   });
 };
@@ -159,24 +171,49 @@ const incrementScore = (winner, loser, round) => {
   document.querySelector(`.${winner[0]}-score`).textContent = scores[winner[0]];
   document.querySelector(`[data-round=${loser[0]}-${round}]`).textContent =
     loser[1];
-};
-const winningConditionMet = (numberOfWins) => {
-  return score.player === numberOfWins || score.computer === numberOfWins;
+
+  if (winningConditionMet()) endGame();
 };
 
-const winningMessage = (winner, playerName) => {
-  return `${winner} is the winner. 
-    The final score is: 
-    ${playerName}: ${score.player}
-    Computer: ${score.computer}
-    `;
+const winningConditionMet = () => {
+  const winTotal = Math.floor(userSelections.player.length / 2 + 1);
+  return scores.player === winTotal || scores.computer === winTotal;
 };
 
-const setupGame = async (gameType, bestOf) => {
+const removeGameButtons = () => {
+  userChoiceContainer.innerHTML = '';
+};
+
+const renderWinningMessage = () => {
+  const winner = scores.player > scores.computer ? 'You are' : 'Computer is';
+  alert(`${winner} the winner`);
+};
+
+renderNewGameButton = () => {
+  createGameButton('New Game', '', userChoiceContainer);
+  document
+    .querySelector(`[data-choice="New Game"`)
+    .addEventListener('click', () => {
+      clearCurrentGameStats();
+      currentRound = 0;
+      clearScoreBoard();
+      renderGameOptionForm();
+    });
+};
+
+const endGame = () => {
+  removeGameButtons();
+  renderWinningMessage();
+  renderNewGameButton();
+};
+
+const setupGame = (gameType, bestOf) => {
   const gameChoices = allGameChoices[gameType];
   gameStartForm.style.display = 'none';
   initialScoreBoardRender(bestOf);
   renderPlayingField();
   renderGameChoices(gameChoices);
-  getUserSelection(gameChoices);
+  getUserSelection(gameChoices, bestOf);
 };
+
+renderGameOptionForm();
