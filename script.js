@@ -1,30 +1,36 @@
 const allWinningConditions = {
   rps: {
-    paper: ['rock', 'covers'],
-    rock: ['scissors', 'smashes'],
-    scissors: ['paper', 'cuts'],
+    paper: {
+      rock: 'covers',
+    },
+    rock: {
+      scissors: 'smashes',
+    },
+    scissors: {
+      paper: 'cuts',
+    },
   },
   rpsls: {
-    paper: [
-      ['rock', 'covers'],
-      ['spock', 'disproves'],
-    ],
-    rock: [
-      ['scissors', 'smashes'],
-      ['lizard', 'crushes'],
-    ],
-    scissors: [
-      ['paper', 'cuts'],
-      ['lizard', 'decapitates'],
-    ],
-    lizard: [
-      ['spock', 'poisons'],
-      ['paper', 'eats'],
-    ],
-    spock: [
-      ['scissors', 'smashes'],
-      ['rock', 'vaporizes'],
-    ],
+    paper: {
+      rock: 'covers',
+      spock: 'disproves',
+    },
+    rock: {
+      scissors: 'smashes',
+      lizard: 'crushes',
+    },
+    scissors: {
+      paper: 'cuts',
+      lizard: 'decapitates',
+    },
+    lizard: {
+      spock: 'poisons',
+      paper: 'eats',
+    },
+    spock: {
+      scissors: 'smashes',
+      rock: 'vaporizes',
+    },
   },
 };
 
@@ -77,6 +83,10 @@ const clearCurrentGameStats = () => {
   document.querySelector('.computer-score').textContent = 0;
   document.querySelector('.player-score').textContent = 0;
   result.textContent = '';
+};
+
+const capitalize = (word) => {
+  return word[0].toUpperCase() + word.substring(1);
 };
 
 const renderGameOptionForm = () => {
@@ -160,17 +170,21 @@ const getComputerSelection = (availableChoices) => {
   return computerSelection;
 };
 
-const renderRoundResults = (winner, playerChoice, computerChoice) => {
+const renderRoundResults = (winner, playerChoice, computerChoice, verb) => {
   let message;
   switch (winner) {
     case 'tie':
-      message = `Both players chose ${playerChoice}. It's a tie.`;
+      message = `It's a tie.`;
       break;
     case `player`:
-      message = `You chose ${playerChoice}. The computer chose ${computerChoice}.  You Win!`;
+      message = `${capitalize(
+        playerChoice
+      )} ${verb} ${computerChoice}.  You Win!`;
       break;
     case 'computer':
-      message = `You chose ${playerChoice}. The computer chose ${computerChoice}. The Computer Wins.`;
+      message = `${capitalize(
+        computerChoice
+      )} ${verb} ${playerChoice}. The Computer Wins.`;
   }
   result.textContent = message;
 };
@@ -180,15 +194,16 @@ const determineWinner = (player, computer, availableChoices) => {
     renderRoundResults('tie', player, computer);
     return;
   }
-
-  if (allWinningConditions[gameType][player].includes(computer)) {
+  let winningVerb;
+  if (computer in allWinningConditions[gameType][player]) {
     incrementScore(
       ['player', availableChoices[player]],
       ['computer', availableChoices[computer]],
       currentRound
     );
     currentRound += 1;
-    renderRoundResults('player', player, computer);
+    winningVerb = allWinningConditions[gameType][player][computer];
+    renderRoundResults('player', player, computer, winningVerb);
     return;
   }
 
@@ -197,7 +212,8 @@ const determineWinner = (player, computer, availableChoices) => {
     ['player', availableChoices[player]],
     currentRound
   );
-  renderRoundResults('computer', player, computer);
+  winningVerb = allWinningConditions[gameType][computer][player];
+  renderRoundResults('computer', player, computer, winningVerb);
   currentRound += 1;
 };
 
