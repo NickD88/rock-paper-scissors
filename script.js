@@ -1,7 +1,31 @@
-const winningConditions = {
-  paper: ['rock', 'covers'],
-  rock: ['scissors', 'smashes'],
-  scissors: ['paper', 'cuts'],
+const allWinningConditions = {
+  rps: {
+    paper: ['rock', 'covers'],
+    rock: ['scissors', 'smashes'],
+    scissors: ['paper', 'cuts'],
+  },
+  rpsls: {
+    paper: [
+      ['rock', 'covers'],
+      ['spock', 'disproves'],
+    ],
+    rock: [
+      ['scissors', 'smashes'],
+      ['lizard', 'crushes'],
+    ],
+    scissors: [
+      ['paper', 'cuts'],
+      ['lizard', 'decapitates'],
+    ],
+    lizard: [
+      ['spock', 'poisons'],
+      ['paper', 'eats'],
+    ],
+    spock: [
+      ['scissors', 'smashes'],
+      ['rock', 'vaporizes'],
+    ],
+  },
 };
 
 const allGameChoices = {
@@ -30,6 +54,7 @@ const roundSelections = {
 };
 
 let currentRound = 0;
+let gameType = '';
 
 const gameStartForm = document.querySelector('.game-setup');
 const scoreboardSection = document.querySelector('.scoreboard');
@@ -42,6 +67,7 @@ const computerChoicePlayingField = document.querySelector(
 const playerScore = document.querySelector('.player-score');
 const computerScore = document.querySelector('.computer-score');
 const gameContainer = document.querySelector('.game-container');
+const result = document.querySelector('.result');
 
 const clearCurrentGameStats = () => {
   scores.player = 0;
@@ -50,17 +76,19 @@ const clearCurrentGameStats = () => {
   roundSelections.computer = [];
   document.querySelector('.computer-score').textContent = 0;
   document.querySelector('.player-score').textContent = 0;
+  result.textContent = '';
 };
 
 const renderGameOptionForm = () => {
   gameStartForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const gameType = document.querySelector(
+    const gameVersion = document.querySelector(
       `input[name="game-selection"]:checked`
     );
     const bestOf = document.querySelector(`input[name="best-out-of"]:checked`);
-    setupGame(gameType.value, bestOf.value);
+    gameType = gameVersion.value;
+    setupGame(gameVersion.value, bestOf.value);
   });
 };
 
@@ -115,12 +143,12 @@ const renderScoreBoard = () => {
   });
 };
 
-const getUserSelection = (gameChoices, bestOf) => {
+const getUserSelection = (gameChoices) => {
   document.querySelectorAll('.game-choice').forEach((choice) => {
     choice.addEventListener('click', (e) => {
       let userSelection = e.target.dataset.choice;
       userChoicePlayingField.textContent = gameChoices[userSelection];
-      playRound(userSelection, gameChoices, bestOf);
+      playRound(userSelection, gameChoices);
     });
   });
 };
@@ -132,30 +160,45 @@ const getComputerSelection = (availableChoices) => {
   return computerSelection;
 };
 
+const renderRoundResults = (winner, playerChoice, computerChoice) => {
+  let message;
+  switch (winner) {
+    case 'tie':
+      message = `Both players chose ${playerChoice}. It's a tie.`;
+      break;
+    case `player`:
+      message = `You chose ${playerChoice}. The computer chose ${computerChoice}.  You Win!`;
+      break;
+    case 'computer':
+      message = `You chose ${playerChoice}. The computer chose ${computerChoice}. The Computer Wins.`;
+  }
+  result.textContent = message;
+};
+
 const determineWinner = (player, computer, availableChoices) => {
   if (player === computer) {
-    console.log(
-      `You chose ${player}, the computer chose ${computer}. It's a tie.`
-    );
-  } else if (winningConditions[player].includes(computer)) {
-    console.log(`You chose ${player}, the computer chose ${computer}.
-${player} ${winningConditions[player][1]} ${computer}`);
-    incrementScore(
-      ['player', availableChoices[player]],
-      ['computer', availableChoices[computer]],
-      currentRound
-    );
-    currentRound += 1;
-  } else {
-    console.log(`You chose ${player}, the computer chose ${computer}. The computer wins.
-${computer} ${winningConditions[computer][1]} ${player}`);
-    incrementScore(
-      ['computer', availableChoices[computer]],
-      ['player', availableChoices[player]],
-      currentRound
-    );
-    currentRound += 1;
+    renderRoundResults('tie', player, computer);
+    return;
   }
+
+  if (allWinningConditions[gameType][player].includes(computer)) {
+    incrementScore(
+      ['player', availableChoices[player]],
+      ['computer', availableChoices[computer]],
+      currentRound
+    );
+    currentRound += 1;
+    renderRoundResults('player', player, computer);
+    return;
+  }
+
+  incrementScore(
+    ['computer', availableChoices[computer]],
+    ['player', availableChoices[player]],
+    currentRound
+  );
+  renderRoundResults('computer', player, computer);
+  currentRound += 1;
 };
 
 const playRound = (userChoice, availableChoices) => {
@@ -215,7 +258,7 @@ const setupGame = (gameType, bestOf) => {
   initialScoreBoardRender(bestOf);
   renderPlayingField();
   renderGameChoices(gameChoices);
-  getUserSelection(gameChoices, bestOf);
+  getUserSelection(gameChoices);
 };
 
 renderGameOptionForm();
